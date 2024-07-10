@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: tg-chat-auth
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-name: Telegram Chat Auth Client
+            client-id: tg-bot-backend
+            client-secret: ${OAUTH2_CLIENT_SECRET}
+            scope: openid
+            authorization-grant-type: authorization_code
+            redirect-uri: '{baseUrl}/login/oauth2/code/{registrationId}'
+            provider: keycloak
+
+        provider:
+          keycloak:
+            issuer-uri: http://auth.mydomain.com/realms/TG-CHAT-AUTH
+            user-info-authentication-method: post
+            user-name-attribute: preferred_username
+app:
+  server-url: ${APP_SERVER_URL:http://mydomain.com}
+  tg-bot:
+    enabled: true
+    token: ${TG_BOT_TOKEN}
+    id: ${TG_BOT_ID}
+    name: ${TG_BOT_NAME}
+server:
+  port: 81

@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: tg-chat-auth
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://auth.mydomain.com/realms/TG-CHAT-AUTH
+
+server:
+  port: 83
+  servlet:
+    context-path: /api/v1/resource
+
+logging:
+  level:
+    sun.rmi: info
+    javax:
+      management:
+        remote:
+          rmi: info
+    root: debug

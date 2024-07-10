@@ -1,0 +1,57 @@
+version: "3.8"
+
+services:
+
+  nginx:
+    image: bitnami/nginx:1.27.0
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/server_block.conf:/opt/bitnami/nginx/conf/server_blocks/server_block.conf
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - db-network
+
+  keycloak:
+    image: bitnami/keycloak:24.0.5
+    container_name: chat-iam
+    depends_on:
+      - keycloak-db
+    environment:
+      KEYCLOAK_CREATE_ADMIN_USER: true
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KEYCLOAK_DATABASE_HOST: keycloak-db
+      KEYCLOAK_DATABASE_PORT: 5432
+      KEYCLOAK_DATABASE_USER: ${POSTGRES_USER}
+      KEYCLOAK_DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+      KEYCLOAK_DATABASE_NAME: keycloak
+      KEYCLOAK_EXTRA_ARGS: "--import-realm"
+    volumes:
+      - ./keycloak/import:/opt/bitnami/keycloak/data/import
+    ports:
+      - "82:8080"
+    networks:
+      - db-network
+
+  keycloak-db:
+    image: postgres:16.3-alpine
+    container_name: chat-iam-db
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: /var/lib/postgresql/data
+    ports: [ "${POSTGRES_EXTERNAL_PORT}:5432" ]
+    volumes:
+      - hat-iam-db-data:/var/lib/postgresql/data
+    networks:
+      - db-network
+
+volumes:
+  hat-iam-db-data:
+networks:
+  db-network:
