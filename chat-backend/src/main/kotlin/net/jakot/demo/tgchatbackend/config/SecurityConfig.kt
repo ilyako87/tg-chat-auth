@@ -25,9 +25,7 @@ class SecurityConfig(
 
     @Bean
     @Throws(Exception::class)
-    fun web(
-        http: HttpSecurity
-    ): SecurityFilterChain {
+    fun web(http: HttpSecurity): SecurityFilterChain {
 
         http
             .csrf { obj: CsrfConfigurer<HttpSecurity> -> obj.disable() }
@@ -56,7 +54,6 @@ class SecurityConfig(
                 }
                 super.onAuthenticationSuccess(request, response, authentication)
             }
-
         }
         successHandler.setDefaultTargetUrl("https://t.me/${botId}")
         successHandler.setAlwaysUseDefaultTargetUrl(true)

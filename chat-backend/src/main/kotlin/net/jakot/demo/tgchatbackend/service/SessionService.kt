@@ -12,5 +12,4 @@ class SessionService {
     }
 
     fun getChatAuthSession(it: String): Authentication? = sessions[it]
-
 }

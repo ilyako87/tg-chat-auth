@@ -22,8 +22,8 @@ class ResourceServerClientConfig(
 
     @Bean
     fun resourceServerClient(): RestTemplate {
-        val rest = RestTemplateBuilder().rootUri(serverUrl + RESOURCE_SERVER_SUFFIX).build()
-        rest.interceptors.add(ClientHttpRequestInterceptor { request, body, execution ->
+        val restTemplate = RestTemplateBuilder().rootUri(serverUrl + RESOURCE_SERVER_SUFFIX).build()
+        restTemplate.interceptors.add(ClientHttpRequestInterceptor { request, body, execution ->
             request.headers[CHAT_ID_HEADER]?.first()?.let { chatId ->
                 sessionService.getChatAuthSession(chatId)?.let { principal ->
                     val authorizedClient =
@@ -33,6 +33,6 @@ class ResourceServerClientConfig(
             }
             execution.execute(request, body)
         })
-        return rest
+        return restTemplate
     }
 }

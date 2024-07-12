@@ -18,7 +18,6 @@ fun main(args: Array<String>) {
 
 @Controller
 class TgChatAuthController {
-
     @RequestMapping("/login")
     fun index(@RequestParam(CHAT_ID_SESSION_PARAMETER) chatId: String, session: HttpSession): String {
         session.setAttribute(CHAT_ID_SESSION_PARAMETER, chatId)
